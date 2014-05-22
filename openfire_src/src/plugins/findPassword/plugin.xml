@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  Plugin configuration for the findPassword plugin.
+-->
+<plugin>
+    <class>com.shisong.openfire.plugin.FindPasswordPlugin</class>
+    <name>findPassword</name>
+    <description>findPasswordPlugin</description>
+    <author>Shisong</author>
+    <version>1.0</version>
+    <minServerVersion>3.8.2</minServerVersion>
+
+</plugin>
