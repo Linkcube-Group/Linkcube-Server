@@ -34,7 +34,7 @@ import="org.jivesoftware.util.ParamUtils,
         <head>
             <title>Group Browser</title>
 
-            <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"/>
+            <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
             <meta name="decorator" content="none"/>
 
             <link rel="stylesheet" type="text/css" href="/style/global.css">
@@ -169,7 +169,7 @@ import="org.jivesoftware.util.ParamUtils,
         <head>
             <title>Agent Browser</title>
 
-            <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+            <meta http-equiv="content-type" content="text/html; charset=UTF-8">
             <meta name="decorator" content="none"/>
 
             <link rel="stylesheet" type="text/css" href="/style/global.css">
