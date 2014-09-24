@@ -197,7 +197,7 @@ class ChageAvatarHandler(tornado.web.RequestHandler):
                 # 进行存储
                 # 指定存储目录，产生新的文件名
                 # 获取文件格式，用PIL获得的format不一定正确，所以用原文件名获得
-                image_path = "avatars/"                                     # 指定文件存储路径
+                image_path = "static/"                                     # 指定文件存储路径
                 image_format = send_file['filename'].split('.').pop().lower() # 得到后缀
                 tmp_name = image_path + str(int(time.time())) + '.' + image_format  # 文件名
                 image_one.save(tmp_name)

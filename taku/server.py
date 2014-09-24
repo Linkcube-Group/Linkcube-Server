@@ -44,7 +44,8 @@ from tornado.options import define, options
 define("port", default=8000, help="run on the given port", type=int)
 
 settings = {
-        "cookie_secret": "MtaYBHulSEa1nOyCKH9oM4fooUMSo0ewqIMTMVbMWxA="
+        "static_path": os.path.join(os.path.dirname(__file__), "static"),
+        "cookie_secret": "MtaYBHulSEa1nOyCKH9oM4fooUMSo0ewqIMTMVbMWxA=",
     }
 
 application = tornado.web.Application([
