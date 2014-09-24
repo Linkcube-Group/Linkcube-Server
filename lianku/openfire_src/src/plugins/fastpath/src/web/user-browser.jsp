@@ -32,7 +32,7 @@
     <head>
 
         <title>User Browser</title>
-        <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"/>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
         <meta name="decorator" content="none"/>
 
         <link rel="stylesheet" type="text/css" href="/style/global.css">
@@ -148,7 +148,7 @@
 <head>
 
     <title>User Browser</title>
-    <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <meta name="decorator" content="none"/>
 
     <link rel="stylesheet" type="text/css" href="/style/global.css">
