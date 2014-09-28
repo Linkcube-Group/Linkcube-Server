@@ -190,7 +190,7 @@ class ChageAvatarHandler(tornado.web.RequestHandler):
                 # 判断图片尺寸，不在尺寸内拒绝操作
                 if image_one.size[0] < 250 or image_one.size[1] < 250 or image_one.size[0] > 2000 or image_one.size[1] > 2000:
                     tmp_file.close()
-                    self.data['msg'] = '图片长宽必须在250px~2000px之间'
+                    data['msg'] = '图片长宽必须在250px~2000px之间'
                     # 尺寸不对直接返回
                     json_result = json.dumps(data , ensure_ascii=False)     # 把python对象编码成json格式的字符串
                     self.write(json_result)
