@@ -122,6 +122,7 @@ class GetInfoHandler(tornado.web.RequestHandler):
             data['status'] = True
             data['msg']    = '获取成功'
             info = {}
+            info['username'] = username
             if res['nickname']:
                 info['nickname'] = res['nickname'].encode("utf8")
             else :
