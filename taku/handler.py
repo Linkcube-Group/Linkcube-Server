@@ -165,7 +165,6 @@ class ChageAvatarHandler(tornado.web.RequestHandler):
             # 得到文件对象
             send_file = self.request.files['avatar'][0]
             # 限制文件格式
-            print send_file['content_type']
             if send_file['content_type'] not in image_type_list:
                 data['msg'] = '请上传jpeg、gif、png、bmp等常见格式的图片'
             # 限制文件大小
