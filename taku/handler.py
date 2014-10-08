@@ -189,13 +189,13 @@ class ChageAvatarHandler(tornado.web.RequestHandler):
                     self.write(json_result)
                     return
                 # 判断图片尺寸，不在尺寸内拒绝操作
-                if image_one.size[0] < 250 or image_one.size[1] < 250 or image_one.size[0] > 2000 or image_one.size[1] > 2000:
-                    tmp_file.close()
-                    data['msg'] = '图片长宽必须在250px~2000px之间'
+                #if image_one.size[0] < 250 or image_one.size[1] < 250 or image_one.size[0] > 2000 or image_one.size[1] > 2000:
+                #    tmp_file.close()
+                #    data['msg'] = '图片长宽必须在250px~2000px之间'
                     # 尺寸不对直接返回
-                    json_result = json.dumps(data , ensure_ascii=False)     # 把python对象编码成json格式的字符串
-                    self.write(json_result)
-                    return
+                #    json_result = json.dumps(data , ensure_ascii=False)     # 把python对象编码成json格式的字符串
+                #    self.write(json_result)
+                #    return
                 # 进行存储
                 # 指定存储目录，产生新的文件名
                 # 获取文件格式，用PIL获得的format不一定正确，所以用原文件名获得
