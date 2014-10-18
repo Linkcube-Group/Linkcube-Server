@@ -104,7 +104,6 @@ class EditInfoHandler(tornado.web.RequestHandler):
         sql = "update `ofUser` set nickname=?, gender=?, age=?, height=?, weight=? where username=? "  
         # 修改
         res = db.update(sql, nickname, gender, int(age), height, weight, username)
-        print username
         if res :       # 修改成功
             data['status'] = True
             data['msg']    = '修改成功'
@@ -239,5 +238,74 @@ class GetAvatarHandler(tornado.web.RequestHandler):
             data['avatar'] = avatar
             data['status'] = True
             data['msg']    = '获取成功'
+        json_result = json.dumps(data , ensure_ascii=False)     # 把python对象编码成json格式的字符串
+        self.write(json_result)
+
+
+class UploadRecordHandler(tornado.web.RequestHandler):
+    def post(self):
+        # 获取cookie保证用户已登录
+        username = self.get_secure_cookie("username")
+        # 获取post数据
+        recordDate = self.get_argument('recordDate', '')
+        duration   = int(self.get_argument('duration', '0'))
+        distance   = int(self.get_argument('distance', '0'))
+        calorie    = int(self.get_argument('calorie', '0'))
+        data = {'status':False, 'msg':''}
+        sql = "select id from `ofRecord` where username=? and recordDate=?"
+        res = db.select_one(sql, username, recordDate)
+        if res is not None :                # 已上传过，更新信息
+            recordID = res['id']
+            sql = "update `ofRecord` set recordDate=?, duration=?, distance=?, calorie=? where id=? "
+            res = db.update(sql, recordDate, duration, distance, calorie, recordID)
+        else :                              # 未上传过，插入信息
+            table = "ofRecord"
+            kw = {"username":username, "recordDate":recordDate, "duration":duration, "distance":distance, "calorie":calorie}
+            res = db.insert(table, **kw)
+        if res :       # 修改成功
+            data['status'] = True
+            data['msg']    = '修改成功'
+        json_result = json.dumps(data , ensure_ascii=False)     # 把python对象编码成json格式的字符串
+        self.write(json_result)
+
+
+class SingleDayRecordHandler(tornado.web.RequestHandler):
+    def post(self):
+        username = self.get_secure_cookie("username")
+        # 获取post数据
+        recordDate = self.get_argument('historyDate', '')
+        data = {'status':False, 'msg':'该日期无记录'}
+        sql = "select * from `ofRecord` where username=? and recordDate=? "
+        res = db.select_one(sql, username, recordDate)
+        if res :                         # 查找成功
+            data['status'] = True
+            data['msg']    = '获取成功'
+            info = {}
+            info['username'] = username
+            # int值不需要编码
+            info['singleDayDuration']      = res['duration']
+            info['singleDayDistance']      = res['distance']
+            info['singleDayCalorie']       = res['calorie']
+            data['info']     = info
+        json_result = json.dumps(data , ensure_ascii=False)     # 把python对象编码成json格式的字符串
+        self.write(json_result)
+
+
+class TotalRecordHandler(tornado.web.RequestHandler):
+    def post(self):
+        username = self.get_secure_cookie("username")
+        data = {'status':False, 'msg':'无记录'}
+        sql = "select sum(duration), sum(distance), sum(calorie) from `ofRecord` where username=? "
+        res = db.select_one(sql, username)
+        if res :                         # 查找成功
+            data['status'] = True
+            data['msg']    = '获取成功'
+            info = {}
+            info['username'] = username
+            # int值不需要编码
+            info['TotalDuration']      = int(res['sum(calorie)'])
+            info['TotalDistance']      = int(res['sum(distance)'])
+            info['TotalCalorie']       = int(res['sum(duration)'])
+            data['info']     = info
         json_result = json.dumps(data , ensure_ascii=False)     # 把python对象编码成json格式的字符串
         self.write(json_result)

@@ -49,13 +49,17 @@ settings = {
     }
 
 application = tornado.web.Application([
-    (r"/register",     RegisterHandler),
-    (r"/login",        LoginHandler),
-    (r"/logout",       LogoutHandler),
-    (r"/editinfo",     EditInfoHandler),
-    (r"/getinfo",      GetInfoHandler),
-    (r"/changeavatar", ChageAvatarHandler),
-    (r"/getavatar",    GetAvatarHandler),
+    (r"/register",             RegisterHandler),
+    (r"/login",                LoginHandler),
+    (r"/logout",               LogoutHandler),
+    (r"/editinfo",             EditInfoHandler),
+    (r"/getinfo",              GetInfoHandler),
+    (r"/changeavatar",         ChageAvatarHandler),
+    (r"/getavatar",            GetAvatarHandler),
+    (r"/uploadGameRecord",     UploadRecordHandler),
+    (r"/getSingleDayHistory",  SingleDayRecordHandler),
+    (r"/getTotalHistory",      TotalRecordHandler),
+
 ], **settings)
 
 
