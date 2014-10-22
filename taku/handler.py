@@ -249,18 +249,19 @@ class UploadRecordHandler(tornado.web.RequestHandler):
         # 获取post数据
         recordDate = self.get_argument('recordDate', '')
         duration   = int(self.get_argument('duration', '0'))
-        distance   = int(self.get_argument('distance', '0'))
+        distance   = float(self.get_argument('distance', '0'))
         calorie    = int(self.get_argument('calorie', '0'))
+        target     = float(self.get_argument('calorie', '0'))
         data = {'status':False, 'msg':''}
         sql = "select id from `ofRecord` where username=? and recordDate=?"
         res = db.select_one(sql, username, recordDate)
         if res is not None :                # 已上传过，更新信息
             recordID = res['id']
-            sql = "update `ofRecord` set recordDate=?, duration=?, distance=?, calorie=? where id=? "
-            res = db.update(sql, recordDate, duration, distance, calorie, recordID)
+            sql = "update `ofRecord` set recordDate=?, duration=?, distance=?, calorie=?, target=? where id=? "
+            res = db.update(sql, recordDate, duration, distance, calorie, target, recordID)
         else :                              # 未上传过，插入信息
             table = "ofRecord"
-            kw = {"username":username, "recordDate":recordDate, "duration":duration, "distance":distance, "calorie":calorie}
+            kw = {"username":username, "recordDate":recordDate, "duration":duration, "distance":distance, "calorie":calorie, "target", target=?}
             res = db.insert(table, **kw)
         if res :       # 修改成功
             data['status'] = True
@@ -269,6 +270,7 @@ class UploadRecordHandler(tornado.web.RequestHandler):
         self.write(json_result)
 
 
+# 获取用户某一天的记录
 class SingleDayRecordHandler(tornado.web.RequestHandler):
     def post(self):
         username = self.get_secure_cookie("username")
@@ -283,9 +285,10 @@ class SingleDayRecordHandler(tornado.web.RequestHandler):
             info = {}
             info['username'] = username
             # int值不需要编码
-            info['singleDayDuration']      = res['duration']
-            info['singleDayDistance']      = res['distance']
-            info['singleDayCalorie']       = res['calorie']
+            info['duration']      = res['duration']
+            info['distance']      = res['distance']
+            info['calorie']       = res['calorie']
+            info['target']        = res['target']
             data['info']     = info
         json_result = json.dumps(data , ensure_ascii=False)     # 把python对象编码成json格式的字符串
         self.write(json_result)
@@ -303,9 +306,9 @@ class TotalRecordHandler(tornado.web.RequestHandler):
             info = {}
             info['username'] = username
             # int值不需要编码
-            info['TotalDuration']      = int(res['sum(calorie)'])
-            info['TotalDistance']      = int(res['sum(distance)'])
-            info['TotalCalorie']       = int(res['sum(duration)'])
+            info['totalDuration']      = int(res['sum(calorie)'])
+            info['totalDistance']      = int(res['sum(distance)'])
+            info['totalCalorie']       = int(res['sum(duration)'])
             data['info']     = info
         json_result = json.dumps(data , ensure_ascii=False)     # 把python对象编码成json格式的字符串
         self.write(json_result)
