@@ -285,6 +285,7 @@ class SingleDayRecordHandler(tornado.web.RequestHandler):
             info = {}
             info['username'] = username
             # int值不需要编码
+            info['recordDate']    = res['recordDate']
             info['duration']      = res['duration']
             info['distance']      = res['distance']
             info['calorie']       = res['calorie']
