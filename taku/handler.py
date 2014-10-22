@@ -251,7 +251,7 @@ class UploadRecordHandler(tornado.web.RequestHandler):
         duration   = int(self.get_argument('duration', '0'))
         distance   = float(self.get_argument('distance', '0'))
         calorie    = int(self.get_argument('calorie', '0'))
-        target     = float(self.get_argument('calorie', '0'))
+        target     = float(self.get_argument('target', '0'))
         data = {'status':False, 'msg':''}
         sql = "select id from `ofRecord` where username=? and recordDate=?"
         res = db.select_one(sql, username, recordDate)
@@ -261,7 +261,7 @@ class UploadRecordHandler(tornado.web.RequestHandler):
             res = db.update(sql, recordDate, duration, distance, calorie, target, recordID)
         else :                              # 未上传过，插入信息
             table = "ofRecord"
-            kw = {"username":username, "recordDate":recordDate, "duration":duration, "distance":distance, "calorie":calorie, "target", target=?}
+            kw = {"username":username, "recordDate":recordDate, "duration":duration, "distance":distance, "calorie":calorie, "target":target}
             res = db.insert(table, **kw)
         if res :       # 修改成功
             data['status'] = True
