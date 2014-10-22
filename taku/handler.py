@@ -42,6 +42,7 @@ import os
 
 import db
 
+
 class RegisterHandler(tornado.web.RequestHandler):
     def post(self):
         username = self.get_argument('email')
@@ -69,7 +70,6 @@ class LoginHandler(tornado.web.RequestHandler):
         username = self.get_argument('email')
         password = self.get_argument('pwd')
         data = {'status':False}
-
         sql = "select * from `ofUser` where username=? and password=? "
         res = db.select_one(sql, username, password)   # 查询数据库，看用户名和密码是否正确
         if res is None :              # 未找到，则用户名或密码不对
@@ -83,6 +83,12 @@ class LoginHandler(tornado.web.RequestHandler):
 class LogoutHandler(tornado.web.RequestHandler):
     def post(self):
         username = self.get_secure_cookie("username")
+        # 检查是否登录
+        if username is None:
+            data = {'status':False, 'msg':'您尚未登录'}
+            json_result = json.dumps(data , ensure_ascii=False)     # 把python对象编码成json格式的字符串
+            self.write(json_result)
+            return
         data = {'status':True, 'msg':'注销成功'}
         self.clear_cookie("username")
         json_result = json.dumps(data , ensure_ascii=False)     # 把python对象编码成json格式的字符串
@@ -92,6 +98,12 @@ class EditInfoHandler(tornado.web.RequestHandler):
     def post(self):
         # 获取cookie保证用户已登录
         username = self.get_secure_cookie("username")
+        # 检查是否登录
+        if username is None:
+            data = {'status':False, 'msg':'您尚未登录'}
+            json_result = json.dumps(data , ensure_ascii=False)     # 把python对象编码成json格式的字符串
+            self.write(json_result)
+            return
         # 获取post数据
         nickname = self.get_argument('nickname', '')
         gender   = self.get_argument('gender', '男')
@@ -114,6 +126,12 @@ class EditInfoHandler(tornado.web.RequestHandler):
 class GetInfoHandler(tornado.web.RequestHandler):
     def post(self):
         username = self.get_secure_cookie("username")
+        # 检查是否登录
+        if username is None:
+            data = {'status':False, 'msg':'您尚未登录'}
+            json_result = json.dumps(data , ensure_ascii=False)     # 把python对象编码成json格式的字符串
+            self.write(json_result)
+            return
         data = {'status':False, 'msg':'获取失败'}
         sql = "select * from `ofUser` where username=? "
         res = db.select_one(sql, username)
@@ -152,6 +170,12 @@ class ChageAvatarHandler(tornado.web.RequestHandler):
     def post(self):
         # 获取cookie保证用户已登录
         username = self.get_secure_cookie("username")
+        # 检查是否登录
+        if username is None:
+            data = {'status':False, 'msg':'您尚未登录'}
+            json_result = json.dumps(data , ensure_ascii=False)     # 把python对象编码成json格式的字符串
+            self.write(json_result)
+            return
         # 默认为修改失败
         data = {'status':False, 'msg':'修改失败'}
         # request.files会有这种格式的信息:{"avatar":[{'filename':'', 'content_type':'', 'body':''}]}
@@ -228,6 +252,12 @@ class GetAvatarHandler(tornado.web.RequestHandler):
     def post(self):
         # 获取cookie保证用户已登录
         username = self.get_secure_cookie("username")
+        # 检查是否登录
+        if username is None:
+            data = {'status':False, 'msg':'您尚未登录'}
+            json_result = json.dumps(data , ensure_ascii=False)     # 把python对象编码成json格式的字符串
+            self.write(json_result)
+            return
         # 默认为修改失败
         data = {'status':False, 'msg':'获取失败'}
         # 从数据库中取出头像地址
@@ -246,6 +276,12 @@ class UploadRecordHandler(tornado.web.RequestHandler):
     def post(self):
         # 获取cookie保证用户已登录
         username = self.get_secure_cookie("username")
+        # 检查是否登录
+        if username is None:
+            data = {'status':False, 'msg':'您尚未登录'}
+            json_result = json.dumps(data , ensure_ascii=False)     # 把python对象编码成json格式的字符串
+            self.write(json_result)
+            return
         # 获取post数据
         recordDate = self.get_argument('recordDate', '')
         duration   = int(self.get_argument('duration', '0'))
@@ -274,6 +310,12 @@ class UploadRecordHandler(tornado.web.RequestHandler):
 class SingleDayRecordHandler(tornado.web.RequestHandler):
     def post(self):
         username = self.get_secure_cookie("username")
+        # 检查是否登录
+        if username is None:
+            data = {'status':False, 'msg':'您尚未登录'}
+            json_result = json.dumps(data , ensure_ascii=False)     # 把python对象编码成json格式的字符串
+            self.write(json_result)
+            return
         # 获取post数据
         recordDate = self.get_argument('historyDate', '')
         data = {'status':False, 'msg':'该日期无记录'}
@@ -298,10 +340,17 @@ class SingleDayRecordHandler(tornado.web.RequestHandler):
 class TotalRecordHandler(tornado.web.RequestHandler):
     def post(self):
         username = self.get_secure_cookie("username")
+        # 检查是否登录
+        if username is None:
+            data = {'status':False, 'msg':'您尚未登录'}
+            json_result = json.dumps(data , ensure_ascii=False)     # 把python对象编码成json格式的字符串
+            self.write(json_result)
+            return
         data = {'status':False, 'msg':'无记录'}
         sql = "select sum(duration), sum(distance), sum(calorie) from `ofRecord` where username=? "
         res = db.select_one(sql, username)
-        if res :                         # 查找成功
+        # 若查询不到消息，res为：{'sum(calorie)': None, 'sum(distance)': None, 'sum(duration)': None}
+        if res['sum(calorie)']:                         # 查找成功
             data['status'] = True
             data['msg']    = '获取成功'
             info = {}

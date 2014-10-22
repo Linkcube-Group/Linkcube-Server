@@ -65,6 +65,7 @@ application = tornado.web.Application([
 
 
 if __name__ == "__main__":
+    # db.create_engine('root', 'root', 'taku')  # 本地测试使用
     db.create_engine('root', 'Linkcube2013', 'taku')
     tornado.options.parse_command_line()
     http_server = tornado.httpserver.HTTPServer(application)
