@@ -307,9 +307,9 @@ class TotalRecordHandler(tornado.web.RequestHandler):
             info = {}
             info['username'] = username
             # int值不需要编码
-            info['totalDuration']      = int(res['sum(calorie)'])
-            info['totalDistance']      = int(res['sum(distance)'])
-            info['totalCalorie']       = int(res['sum(duration)'])
+            info['totalDuration']      = int(res['sum(duration)'])
+            info['totalDistance']      = float(res['sum(distance)'])
+            info['totalCalorie']       = int(res['sum(calorie)'])
             data['info']     = info
         json_result = json.dumps(data , ensure_ascii=False)     # 把python对象编码成json格式的字符串
         self.write(json_result)
