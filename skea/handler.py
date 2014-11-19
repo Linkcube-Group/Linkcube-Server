@@ -114,7 +114,7 @@ class SaveQuestionResultHandler(tornado.web.RequestHandler):
         # 默认为修改失败
         data = {'status':101, }
         # 构造修改语句
-        sql = "update `ofUser` set birthday=?, height=?, weight=? where username=? "
+        sql = "update `ofRecord` set birthday=?, height=?, weight=? where username=? "
         db.update(sql, birthday, height, weight, username)
 
         sql = "select * from `ofQuestionResult` where username=? and date=? "
@@ -154,6 +154,66 @@ class GetLastQuestionResultHandler(tornado.web.RequestHandler):
             if res['result']:
                 info['result']   = res['result']
             data['info']     = info
+        else:
+            data['status'] = 104
+        json_result = json.dumps(data , ensure_ascii=False)     # 把python对象编码成json格式的字符串
+        self.write(json_result)
+
+
+class SaveRecordHandler(tornado.web.RequestHandler):
+    def post(self):
+        username     = self.get_argument('email', '')
+        date         = self.get_argument('date', '')
+        heighScore  = self.get_argument('heighScore', '')
+        factScore    = self.get_argument('factScore', '')
+        exerciseTime = self.get_argument('exerciseTime', '')
+        level        = self.get_argument('level', '')
+        explosive    = self.get_argument('explosive', '')
+        endurance    = self.get_argument('endurance', '')
+        exerciseData = self.get_argument('exerciseData', '')
+        scoreData    = self.get_argument('scoreData', '')
+        # 默认为修改失败
+        data = {'status':101, }
+        sql = "select * from `ofRecord` where username=? and date=? "
+        res = db.select_one(sql, username, date)
+        # 已有，则覆盖
+        if res:
+            sql = "update `ofRecord` set heighScore=?, factScore=?, exerciseTime=?, level=?, explosive=?, endurance=?, exerciseData=?, scoreData=? where username=? and date=? "
+            res = db.update(sql, heighScore, factScore, exerciseTime, level, explosive, endurance, exerciseData, scoreData, username, date)
+        # 没有，则插入
+        else:
+            table = "ofRecord"
+            kw = {"username":username, "date":date, "heighScore":heighScore, "factScore":factScore, "exerciseTime":exerciseTime, "level":level, "explosive":explosive, "endurance":endurance, "exerciseData":exerciseData, "scoreData":scoreData}
+            res = db.insert(table, **kw)
+        data['status'] = 100
+        json_result = json.dumps(data , ensure_ascii=False)     # 把python对象编码成json格式的字符串
+        self.write(json_result)
+
+
+class GetRecordsHandler(tornado.web.RequestHandler):
+    def post(self):
+        username = self.get_argument('email', '')
+        begin    = self.get_argument('begin', '')
+        data = {'status':101 }
+        sql = "select * from `ofRecord` where username=? and date >= ?"
+        res = db.select(sql, username, begin)
+        if res :                         # 查找成功
+            data['status'] = 100
+            records = [];
+            for row in res:
+                record = {}
+                record['username']     = username
+                record['date']         = row['date']
+                record['heighScore']   = row['heighScore']
+                record['factScore']    = row['factScore']
+                record['exerciseTime'] = row['exerciseTime']
+                record['level']        = row['level']
+                record['explosive']    = row['explosive']
+                record['endurance']    = row['endurance']
+                record['exerciseData'] = row['exerciseData']
+                record['scoreData']    = row['scoreData']
+                records.append(record)
+            data['records']     = records
         else:
             data['status'] = 104
         json_result = json.dumps(data , ensure_ascii=False)     # 把python对象编码成json格式的字符串

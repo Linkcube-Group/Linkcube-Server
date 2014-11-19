@@ -24,13 +24,15 @@ application = tornado.web.Application([
     (r"/getInfo",               GetInfoHandler),
     (r"/saveQuestionResult",    SaveQuestionResultHandler),
     (r"/getLastQuestionResult", GetLastQuestionResultHandler),
+    (r"/saveRecord",            SaveRecordHandler),
+    (r"/getRecords",            GetRecordsHandler),
 
 ], **settings)
 
 
 
 if __name__ == "__main__":
-    # db.create_engine('root', 'root', 'taku')  # 本地测试使用
+    # db.create_engine('root', 'root', 'skea')  # 本地测试使用
     db.create_engine('root', 'Linkcube2013', 'skea')
     tornado.options.parse_command_line()
     http_server = tornado.httpserver.HTTPServer(application)
