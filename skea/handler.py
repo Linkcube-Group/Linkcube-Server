@@ -113,17 +113,17 @@ class SaveQuestionResultHandler(tornado.web.RequestHandler):
         result   = self.get_argument('result', '')
         # 默认为修改失败
         data = {'status':101, }
-        # 构造修改语句
-        sql = "update `ofRecord` set birthday=?, height=?, weight=? where username=? "
+        # 修改用户的最新身高体重
+        sql = "update `ofUser` set birthday=?, height=?, weight=? where username=? "
         db.update(sql, birthday, height, weight, username)
-
+        # 问卷结果
         sql = "select * from `ofQuestionResult` where username=? and date=? "
         res = db.select_one(sql, username, date)
-        # 已有，则覆盖
+        # 今天已经测试过
         if res:
             sql = "update `ofQuestionResult` set birthday=?, height=?, weight=?, result=? where username=? and date=? "
             res = db.update(sql, birthday, height, weight, result, username, date)
-        # 没有，则插入
+        # 今天未测试过
         else:
             table = "ofQuestionResult"
             kw = {"username":username, "birthday":birthday, "height":height, "weight":weight, "date":date, "result":result}
@@ -164,7 +164,7 @@ class SaveRecordHandler(tornado.web.RequestHandler):
     def post(self):
         username     = self.get_argument('email', '')
         date         = self.get_argument('date', '')
-        heighScore  = self.get_argument('heighScore', '')
+        heighScore   = self.get_argument('heighScore', '')
         factScore    = self.get_argument('factScore', '')
         exerciseTime = self.get_argument('exerciseTime', '')
         level        = self.get_argument('level', '')
@@ -195,6 +195,7 @@ class GetRecordsHandler(tornado.web.RequestHandler):
         username = self.get_argument('email', '')
         begin    = self.get_argument('begin', '')
         data = {'status':101 }
+            data['records'] = []
         sql = "select * from `ofRecord` where username=? and date >= ?"
         res = db.select(sql, username, begin)
         if res :                         # 查找成功
