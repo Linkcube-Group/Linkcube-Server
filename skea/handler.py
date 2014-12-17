@@ -197,7 +197,7 @@ class GetRecordsHandler(tornado.web.RequestHandler):
         username = self.get_argument('email', '')
         begin    = self.get_argument('begin', '')
         data = {'status':101 }
-            data['records'] = []
+        data['records'] = []
         sql = "select * from `ofRecord` where username=? and date >= ?"
         res = db.select(sql, username, begin)
         if res :                         # 查找成功
