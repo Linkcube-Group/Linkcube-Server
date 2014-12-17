@@ -108,9 +108,9 @@ class SaveQuestionResultHandler(tornado.web.RequestHandler):
         birthday = self.get_argument('birthday', '')
         height   = self.get_argument('height', '')
         weight   = self.get_argument('weight', '')
-
         date     = self.get_argument('date', '')
         result   = self.get_argument('result', '')
+        score    = self.get_argument('score', '')
         # 默认为修改失败
         data = {'status':101, }
         # 修改用户的最新身高体重
@@ -121,12 +121,12 @@ class SaveQuestionResultHandler(tornado.web.RequestHandler):
         res = db.select_one(sql, username, date)
         # 今天已经测试过
         if res:
-            sql = "update `ofQuestionResult` set birthday=?, height=?, weight=?, result=? where username=? and date=? "
-            res = db.update(sql, birthday, height, weight, result, username, date)
+            sql = "update `ofQuestionResult` set birthday=?, height=?, weight=?, result=?, score=? where username=? and date=? "
+            res = db.update(sql, birthday, height, weight, result, score, username, date)
         # 今天未测试过
         else:
             table = "ofQuestionResult"
-            kw = {"username":username, "birthday":birthday, "height":height, "weight":weight, "date":date, "result":result}
+            kw = {"username":username, "birthday":birthday, "height":height, "weight":weight, "date":date, "result":result, "score":score}
             res = db.insert(table, **kw)
         data['status'] = 100
         json_result = json.dumps(data , ensure_ascii=False)     # 把python对象编码成json格式的字符串
@@ -153,6 +153,8 @@ class GetLastQuestionResultHandler(tornado.web.RequestHandler):
                 info['date']     = res['date']
             if res['result']:
                 info['result']   = res['result']
+            if res['score']:
+                info['score']   = res['score']
             data['info']     = info
         else:
             data['status'] = 104
