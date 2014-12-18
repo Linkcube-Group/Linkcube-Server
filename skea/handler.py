@@ -227,7 +227,7 @@ class FindPasswordHandler(tornado.web.RequestHandler):
         username = self.get_argument('email', '')
         data = {'status':101 }
         sql = "select password from `ofUser` where username=?"
-        res = db.select(sql, username)
+        res = db.select_one(sql, username)
         if res :                         # 查找成功
             data['status'] = 100
             password = res['password']
