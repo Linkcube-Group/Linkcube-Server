@@ -18,7 +18,7 @@ def sendPassword(email, password):
     subject  = 'no-reply'
     # 邮件内容
     # msg = MIMEText('你好','text','utf-8')#中文需参数‘utf-8’，单字节字符不需要 
-    msg = MIMEText('<html><p>您的skea密码为:' + password + '</p></html>', 'html', 'utf-8')  # html格式的邮件
+    msg = MIMEText('<html><p>Your password of skea is:' + password + '</p></html>', 'html', 'utf-8')  # html格式的邮件
     # 邮件主题
     msg['Subject'] = Header(subject, 'utf-8')
     # 发送邮件
