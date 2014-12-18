@@ -26,6 +26,7 @@ application = tornado.web.Application([
     (r"/getLastQuestionResult", GetLastQuestionResultHandler),
     (r"/saveRecord",            SaveRecordHandler),
     (r"/getRecords",            GetRecordsHandler),
+    (r"/findPassword",          FindPasswordHandler),
 
 ], **settings)
 

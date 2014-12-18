@@ -222,3 +222,20 @@ class GetRecordsHandler(tornado.web.RequestHandler):
         json_result = json.dumps(data , ensure_ascii=False)     # 把python对象编码成json格式的字符串
         self.write(json_result)
 
+class FindPasswordHandler(tornado.web.RequestHandler):
+    def post(self):
+        username = self.get_argument('email', '')
+        data = {'status':101 }
+        sql = "select password from `ofUser` where username=?"
+        res = db.select(sql, username, begin)
+        if res :                         # 查找成功
+            data['status'] = 100
+            password = res['password']
+            import MailDeliver
+            MailDeliver.sendPassword(username, password)
+        else:
+            data['status'] = 104
+        json_result = json.dumps(data , ensure_ascii=False)     # 把python对象编码成json格式的字符串
+        self.write(json_result)
+
+        
